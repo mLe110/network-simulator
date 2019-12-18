@@ -1,17 +1,11 @@
 import json
-from unittest import TestCase
 
-from network_simulator import create_app
-
-BASE_URL = "http://127.0.0.1:5000/api/v1"
+from network_simulator.test.controller.base_api import TestBaseApi, BASE_URL
 
 
-class TestViotdApi(TestCase):
+class TestViotdApi(TestBaseApi):
     def setUp(self):
-        self.device_id = "testdevice"
-        self.net_namespace_name = "testns"
-        self.app = create_app(self.net_namespace_name).test_client()
-        self.register_payload = {"device_id": self.device_id}
+        super().setUp()
 
     def test_registerDevice(self):
         response = self.app.post(BASE_URL + "/register",

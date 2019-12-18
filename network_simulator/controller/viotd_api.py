@@ -1,16 +1,11 @@
-import enum
-
 from flask import (
     Blueprint, request, current_app,
     jsonify)
 
+from network_simulator.controller.return_value import ReturnValues
 from network_simulator.exceptions.device_exceptions import DeviceException
 
 viotd_api_bp = Blueprint("viotd_api", __name__)
-
-
-class ReturnValues(enum.Enum):
-    SUCCESS = "DONE"
 
 
 @viotd_api_bp.route("/")
@@ -24,7 +19,7 @@ def endpoints():
 def register_device():
     data = request.get_json()
     current_app.logger.debug("Register endpoint called with data: '{}'.".format(data))
-    net_ns = current_app.net_sim_service.register_new_device(data["device_id"])
+    net_ns = current_app.net_sim_service.register_new_device(data)
     return jsonify({
         "ns_namespace": net_ns
     })

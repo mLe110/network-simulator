@@ -20,3 +20,11 @@ class UnknownDeviceException(DeviceException):
 
     def __init__(self, msg):
         super().__init__(msg)
+
+
+class InvalidDeviceListException(DeviceException):
+    """ Exception raised when device list sent for simulation is invalid.
+    """
+
+    def __init__(self, msg):
+        super().__init__(msg)
