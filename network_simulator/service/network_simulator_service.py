@@ -18,6 +18,7 @@ class NetworkSimulatorService:
             raise DeviceAlreadyRegisteredException("Cannot add device with ID '{}'. "
                                                    "Device already registered".format(device_id))
         self.devices[device_id] = Device(device_id)
+        return self.net_namespace_name
 
     def unregister_device(self, device_id):
         if device_id not in self.devices.keys():

@@ -17,14 +17,13 @@ class TestViotdApi(TestCase):
         response = self.app.post(BASE_URL + "/register",
                                  data=json.dumps(self.register_payload),
                                  content_type="application/json")
-
-        self.assertEqual(b"DONE", response.get_data())
+        data = json.loads(response.get_data())
+        self.assertEqual(self.net_namespace_name, data["ns_namespace"])
 
     def test_registerDeviceTwice(self):
-        response = self.app.post(BASE_URL + "/register",
+        self.app.post(BASE_URL + "/register",
                                  data=json.dumps(self.register_payload),
                                  content_type="application/json")
-        self.assertEqual(b"DONE", response.get_data())
 
         response = self.app.post(BASE_URL + "/register",
                                  data=json.dumps(self.register_payload),
@@ -32,10 +31,9 @@ class TestViotdApi(TestCase):
         self.assertEqual(400, response.status_code)
 
     def test_unregisterDevice(self):
-        response = self.app.post(BASE_URL + "/register",
+        self.app.post(BASE_URL + "/register",
                                  data=json.dumps(self.register_payload),
                                  content_type="application/json")
-        self.assertEqual(b"DONE", response.get_data())
 
         response = self.app.delete(BASE_URL + "/unregister/" + self.device_id)
         self.assertEqual(200, response.status_code)

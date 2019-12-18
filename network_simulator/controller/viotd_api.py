@@ -16,7 +16,7 @@ class ReturnValues(enum.Enum):
 @viotd_api_bp.route("/")
 def endpoints():
     return "possible routes: <br/>" \
-           "POST: /register # (with device ID and tap if name)<br/>" \
+           "POST: /register # (with device_id and tap_if_name)<br/>" \
            "DELETE: /unregister/<device_id>"
 
 
@@ -24,8 +24,10 @@ def endpoints():
 def register_device():
     data = request.get_json()
     current_app.logger.debug("Register endpoint called with data: '{}'.".format(data))
-    current_app.net_sim_service.register_new_device(data["device_id"])
-    return ReturnValues.SUCCESS.value
+    net_ns = current_app.net_sim_service.register_new_device(data["device_id"])
+    return jsonify({
+        "ns_namespace": net_ns
+    })
 
 
 @viotd_api_bp.route("/unregister/<device_id>", methods=["DELETE"])

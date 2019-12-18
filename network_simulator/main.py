@@ -2,6 +2,7 @@ import argparse
 
 from network_simulator import create_app
 
+# TODO or get net namespace name from cat /proc/self/cgroup
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -9,6 +10,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     app = create_app(args.net_namespace)
-    # register_network_simulator_service(app, )
 
     app.run()
