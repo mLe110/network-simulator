@@ -1,14 +1,19 @@
 import argparse
+import platform
 
 from network_simulator import create_app
 
-# TODO or get net namespace name from cat /proc/self/cgroup
+
+def get_container_id():
+    return platform.node()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--net-namespace", required=True, type=str, help="The namespace the container is running in.")
+    parser.add_argument("--sim-ip-subnet", required=True, type=str, help="The IP subnet used in the simulation.")
     args = parser.parse_args()
 
-    app = create_app(args.net_namespace)
+    net_namespace = get_container_id()
+    app = create_app(net_namespace)
 
     app.run()
