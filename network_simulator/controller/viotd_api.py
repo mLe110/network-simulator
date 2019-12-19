@@ -8,13 +8,6 @@ from network_simulator.controller.return_value import ReturnValues
 viotd_api_bp = Blueprint("viotd_api", __name__)
 
 
-@viotd_api_bp.route("/")
-def endpoints():
-    return "possible routes: <br/>" \
-           "POST: /register # (with device_id and tap_if_name)<br/>" \
-           "DELETE: /unregister/<device_id>"
-
-
 @viotd_api_bp.route("/register", methods=["POST"])
 def register_device():
     data = request.get_json()
