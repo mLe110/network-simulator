@@ -42,7 +42,7 @@ In this specific case, the status code would be 400 (bad request).
 
 ### Simulation API
 #### Start simulation
-To start the simulation, issue a POST request to "/simulate". The request payload contains the coordinates for each VIoTD which participates in the simulation. The current implementation requires that the registered devices match with the devices list in the request payload.
+To start the simulation, issue a POST request to "/simulation/start". The request payload contains the coordinates for each VIoTD which participates in the simulation. The current implementation requires that the registered devices match with the devices list in the request payload.
 
 For example, if three devices with the IDs "deviceID1", "deviceID2", and "deviceID3" have already registered themselves, the payload for this endpoint would look similar to the following.
 ```json
@@ -73,3 +73,6 @@ If something goes wrong, e.g. the list contains a device which is not registered
   }
 }
 ```
+
+#### Stop simulation
+To stop a simulation, issue a GET request to "/simulation/stop". This endpoint does not require any parameters and returns status code 200 if the simulation was stopped successfully. If the simulation is not running and this endpoint is called, a response with status code 400 will be returned.

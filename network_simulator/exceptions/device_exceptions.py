@@ -1,12 +1,7 @@
-class DeviceException(Exception):
-    """ General exception for device. Every device exception should inherit this class.
-    """
-
-    def __init__(self, msg):
-        super().__init__(self, msg)
+from werkzeug.exceptions import BadRequest
 
 
-class DeviceAlreadyRegisteredException(DeviceException):
+class DeviceAlreadyRegisteredException(BadRequest):
     """ Exception raised when a device was already registered.
     """
 
@@ -14,7 +9,7 @@ class DeviceAlreadyRegisteredException(DeviceException):
         super().__init__(msg)
 
 
-class UnknownDeviceException(DeviceException):
+class UnknownDeviceException(BadRequest):
     """ Exception raised when a device is not known to the service.
     """
 
@@ -22,7 +17,7 @@ class UnknownDeviceException(DeviceException):
         super().__init__(msg)
 
 
-class InvalidDeviceListException(DeviceException):
+class InvalidDeviceListException(BadRequest):
     """ Exception raised when device list sent for simulation is invalid.
     """
 

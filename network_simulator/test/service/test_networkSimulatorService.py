@@ -35,7 +35,7 @@ class TestNetworkSimulatorService(TestCase):
         self.network_svc.devices[device2.device_id] = device2
         with patch("network_simulator.service.network_simulator_service.open", mock_open()) as mocked_file:
             self.network_svc.write_device_config()
-            self.assertEqual([call(str(device1)), call(str(device2))], mocked_file().write.call_args_list)
+            self.assertEqual([call(str(device1)+'\n'), call(str(device2)+'\n')], mocked_file().write.call_args_list)
 
     def test_registerDeviceTwice(self):
         self.network_svc.devices[self.device_id] = ""

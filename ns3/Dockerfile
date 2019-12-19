@@ -20,6 +20,7 @@ WORKDIR /ns3
 ENV BAKE_HOME=/ns3/bake 
 ENV PATH=$PATH:$BAKE_HOME
 ENV PYTHONPATH=$PYTHONPATH:$BAKE_HOME
+ENV WAF=/ns3/source/ns-3.29/waf
 
 RUN git clone https://gitlab.com/nsnam/bake
 RUN bake.py configure -e ns-3.29 \

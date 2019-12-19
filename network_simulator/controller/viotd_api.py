@@ -1,9 +1,9 @@
 from flask import (
     Blueprint, request, current_app,
     jsonify)
+from werkzeug.exceptions import BadRequest
 
 from network_simulator.controller.return_value import ReturnValues
-from network_simulator.exceptions.device_exceptions import DeviceException
 
 viotd_api_bp = Blueprint("viotd_api", __name__)
 
@@ -39,12 +39,12 @@ def no_endpoint(error):
     return "Unknown endpoint."
 
 
-@viotd_api_bp.errorhandler(DeviceException)
+@viotd_api_bp.errorhandler(BadRequest)
 def exception_wrapper(ex):
     response = {
         "error": {
             "type": ex.__class__.__name__,
-            "message": str(ex.args[1])
+            "message": str(ex.description)
         }
     }
     return jsonify(response), 400
