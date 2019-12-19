@@ -9,9 +9,14 @@ class Device:
         self.xpos = None
         self.ypos = None
 
+    def __str__(self):
+        return "{},{},{},{},{}".format(self.device_id, self.device_type,
+                                       self.tap_if_name, self.xpos, self.ypos)
+
 
 class NetworkSimulatorService:
     def __init__(self, net_namespace_name):
+        self.device_config_file_path = "sim_devices.conf"
         self.net_namespace_name = net_namespace_name
         self.devices = {}
 
@@ -28,9 +33,19 @@ class NetworkSimulatorService:
             raise UnknownDeviceException("Cannot unregister device '{}'.".format(device_id))
         self.devices.pop(device_id)
 
+    def run_simulation(self, device_list):
+        self.update_devices(device_list)
+        self.write_device_config()
+        # TODO run ns-3
+
     def update_devices(self, device_list):
         for device in device_list:
             self.set_device_position(device)
+
+    def write_device_config(self):
+        with open(self.device_config_file_path, "w") as f:
+            for device in self.devices.values():
+                f.write(str(device))
 
     def set_device_position(self, data_dict):
         device = self.get_device(data_dict["device_id"])
