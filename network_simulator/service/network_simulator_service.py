@@ -1,3 +1,4 @@
+import logging
 import subprocess
 
 from network_simulator.exceptions.device_exceptions import DeviceAlreadyRegisteredException, UnknownDeviceException
@@ -19,6 +20,7 @@ class Device:
 
 class NetworkSimulatorService:
     def __init__(self, net_namespace_name):
+        self.logger = logging.getLogger(__name__)
         self.device_config_file_path = "sim_devices.conf"
         self.net_namespace_name = net_namespace_name
         self.proc = None
@@ -29,15 +31,18 @@ class NetworkSimulatorService:
         if device_id in self.devices.keys():
             raise DeviceAlreadyRegisteredException("Cannot add device with ID '{}'. "
                                                    "Device already registered".format(device_id))
+        self.logger.info("Register new device with ID {}.".format(device_id))
         self.devices[device_id] = Device(device_data)
         return self.net_namespace_name
 
     def unregister_device(self, device_id):
         if device_id not in self.devices.keys():
             raise UnknownDeviceException("Cannot unregister device '{}'.".format(device_id))
+        self.logger.info("Unregister device with ID {}.".format(device_id))
         self.devices.pop(device_id)
 
     def run_simulation(self, device_list):
+        self.logger.info("Run simulation.")
         self.update_devices(device_list)
         self.write_device_config()
         # TODO make simulation source file configurable
@@ -45,21 +50,30 @@ class NetworkSimulatorService:
         self.start_ns3(sim_src_file)
 
     def stop_simulation(self):
+        self.logger.info("Stop simulation.")
         if self.proc:
-            pass
+            self.proc.terminate()
+            try:
+                self.proc.wait(timeout=1)
+                self.logger.debug("Process exited with rc={}".format(self.proc.returncode))
+            except subprocess.TimeoutExpired:
+                self.logger.warning("Process did not exit in time.")
         else:
             raise SimulationException("Cannot stop simulation. Simulation not running.")
 
     def update_devices(self, device_list):
+        self.logger.debug("Update devices list with: {}".format(device_list))
         for device in device_list:
             self.set_device_position(device)
 
     def write_device_config(self):
+        self.logger.debug("Write device configs to file.")
         with open(self.device_config_file_path, "w") as f:
             for device in self.devices.values():
                 f.write(str(device) + '\n')
 
     def start_ns3(self, sim_src_file):
+        self.logger.debug("Start simulation with simulation file '{}'.".format(sim_src_file))
         self.proc = subprocess.Popen(["$WAF", "--run", sim_src_file], shell=True)
 
     def set_device_position(self, data_dict):
