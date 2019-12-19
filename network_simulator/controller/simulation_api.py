@@ -12,7 +12,7 @@ simulation_api_bp = Blueprint("simulation_api", __name__)
 def run_simulation():
     devices_list = request.get_json()
     if devices_list and len(devices_list) > 1:
-        current_app.net_sim_service.update_devices(devices_list)
+        current_app.net_sim_service.run_simulation(devices_list)
         return ReturnValues.SUCCESS.value
     else:
         raise InvalidDeviceListException("Simulation cannot be started with '{}' devices."
