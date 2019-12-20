@@ -9,8 +9,14 @@ COPY ns3/networks/tap-wifi-full_setup.cc source/ns-3.29/scratch/tap-wifi-full_se
 COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
 
+ENV WAF /ns3/source/ns-3.29/waf
+ENV PYTHONPATH=$PYTHONPATH:/app
+
 RUN pip3 install -r requirements.txt
 COPY . /app
 
+WORKDIR /ns3/source/ns-3.29
+# TODO run container with NET_ADMIN capabilities
+
 ENTRYPOINT ["python3"]
-CMD ["network_simulator/main.py"]
+CMD ["/app/network_simulator/main.py"]

@@ -10,11 +10,18 @@ def get_container_id():
 
 
 def setup_logging():
-    logging.basicConfig(level=logging.DEBUG,
-                        format="%(asctime)s - %(levelname)s - %(message)s",
-                        datefmt="%Y-%m-%d %H:%M:%S",
-                        filename="network_simulator.log",
-                        filemode="w")
+    log_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    root_logger = logging.getLogger()
+
+    file_handler = logging.FileHandler("network_simulator.log")
+    file_handler.setFormatter(log_formatter)
+    file_handler.setLevel(logging.DEBUG)
+    root_logger.addHandler(file_handler)
+
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(log_formatter)
+    console_handler.setLevel(logging.DEBUG)
+    root_logger.addHandler(console_handler)
 
 
 if __name__ == "__main__":

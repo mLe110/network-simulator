@@ -35,3 +35,15 @@ class TestViotdApi(TestBaseApi):
     def test_unregisterUnknownDevice(self):
         response = self.app.delete(BASE_URL + "/unregister/" + self.device_id)
         self.assertEqual(400, response.status_code)
+
+    def test_invalidPayloadVariableWriting(self):
+        del self.register_payload["device_id"]
+        self.register_payload["device-id"] = "testId"
+
+        response = self.app.post(BASE_URL + "/register",
+                                 data=json.dumps(self.register_payload),
+                                 content_type="application/json")
+
+        self.assertEqual(400, response.status_code)
+
+

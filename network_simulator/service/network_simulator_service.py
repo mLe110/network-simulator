@@ -1,5 +1,6 @@
 import logging
 import subprocess
+import threading
 
 from network_simulator.exceptions.device_exceptions import DeviceAlreadyRegisteredException, UnknownDeviceException
 from network_simulator.exceptions.network_simulator_service_exception import SimulationException
@@ -74,7 +75,16 @@ class NetworkSimulatorService:
 
     def start_ns3(self, sim_src_file):
         self.logger.debug("Start simulation with simulation file '{}'.".format(sim_src_file))
-        self.proc = subprocess.Popen(["$WAF", "--run", sim_src_file], shell=True)
+        self.proc = subprocess.Popen(["$WAF --run " + sim_src_file], stdout=subprocess.PIPE,
+                                     stderr=subprocess.STDOUT, shell=True)
+        th = threading.Thread(target=self.output_reader, daemon=True)
+        th.start()
+
+    def output_reader(self):
+        self.logger.debug("Start thread for logging ns-3 output.")
+        log = logging.getLogger("ns3_output")
+        for line in iter(self.proc.stdout.readline, b''):
+            log.info(line.decode("utf-8"))
 
     def set_device_position(self, data_dict):
         device = self.get_device(data_dict["device_id"])

@@ -32,12 +32,13 @@ def no_endpoint(error):
     return "Unknown endpoint."
 
 
+@viotd_api_bp.errorhandler(KeyError)
 @viotd_api_bp.errorhandler(BadRequest)
 def exception_wrapper(ex):
     response = {
         "error": {
             "type": ex.__class__.__name__,
-            "message": str(ex.description)
+            "message":  str(ex.description) if hasattr(ex, "description") else str(ex)
         }
     }
     return jsonify(response), 400
