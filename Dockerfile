@@ -18,5 +18,5 @@ COPY . /app
 WORKDIR /ns3/source/ns-3.29
 # TODO run container with NET_ADMIN capabilities
 
-ENTRYPOINT ["python3"]
-CMD ["/app/network_simulator/main.py"]
+#ENTRYPOINT ["python3"]
+#CMD ["/app/network_simulator/main.py"]

@@ -10,18 +10,17 @@ def get_container_id():
 
 
 def setup_logging():
-    log_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    root_logger = logging.getLogger()
+    log_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     file_handler = logging.FileHandler("network_simulator.log")
     file_handler.setFormatter(log_formatter)
     file_handler.setLevel(logging.DEBUG)
-    root_logger.addHandler(file_handler)
 
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
     console_handler.setLevel(logging.DEBUG)
-    root_logger.addHandler(console_handler)
+
+    logging.basicConfig(handlers=[file_handler, console_handler])
 
 
 if __name__ == "__main__":
@@ -33,4 +32,4 @@ if __name__ == "__main__":
     net_namespace = get_container_id()
     app = create_app(net_namespace)
 
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)

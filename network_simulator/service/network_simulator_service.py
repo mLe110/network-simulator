@@ -82,9 +82,8 @@ class NetworkSimulatorService:
 
     def output_reader(self):
         self.logger.debug("Start thread for logging ns-3 output.")
-        log = logging.getLogger("ns3_output")
         for line in iter(self.proc.stdout.readline, b''):
-            log.info(line.decode("utf-8"))
+            self.logger.info(line.decode("utf-8"))
 
     def set_device_position(self, data_dict):
         device = self.get_device(data_dict["device_id"])
