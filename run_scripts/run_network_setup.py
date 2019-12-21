@@ -22,8 +22,8 @@ def create_libvirt_config_str(args_config):
     config_str = xml_bridge_config.replace("{network_name}", args_config.libvirt_network_name)
     config_str = config_str.replace("{bridge_ip}", args_config.libvirt_bridge_ip)
     config_str = config_str.replace("{netmask}", args_config.libvirt_netmask)
-    config_str = config_str.replace("{ip_start}", args_config.libvirt_start_ip)
-    return config_str.replace("{ip_end}", args_config.libvirt_end_ip)
+    config_str = config_str.replace("{start_ip}", args_config.libvirt_start_ip)
+    return config_str.replace("{end_ip}", args_config.libvirt_end_ip)
 
 
 def get_hypervisor_connection(hypervisor_uri):
@@ -43,14 +43,14 @@ def create_libvirt_network(conn, network_config_str):
 
 
 def setup_libvirt_network(args_config):
-    libvirt_config_str = create_libvirt_config_str(args_config.hypervisor_uri)
-    conn = get_hypervisor_connection(args_config)
+    libvirt_config_str = create_libvirt_config_str(args_config)
+    conn = get_hypervisor_connection(args_config.hypervisor_uri)
     create_libvirt_network(conn, libvirt_config_str)
     conn.close()
 
 
 def run_container(args_config):
-    container = docker_client.containers.run(image="ns:3.29",
+    container = docker_client.containers.run(image="mle110/ns:0.1",
                                              name=args_config.ns_container_name,
                                              ports={'5000/tcp': 5000},
                                              environment={
@@ -74,7 +74,7 @@ def get_container_pid(container_id):
 def mount_container_net_namespace(container_id):
     pid = get_container_pid(container_id)
     os.symlink("/proc/" + str(pid) + "/ns/net",
-               "/var/run/netns")
+               "/var/run/netns/" + container_id)
 
 
 def close_docker_clients():
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     parser.add_argument("--ns3-ip-subnet", required=True, type=str, help="The IP subnet used in the ns3 simulation.")
     parser.add_argument("--ns3-ip-netmask", required=True, type=str,
                         help="The netmask for the IP subnet used in the ns3 simulation.")
-    parser.add_argument("--hyperviser-uri", required=True, type=str, help="The URI of the hypervisor libvirt should "
+    parser.add_argument("--hypervisor-uri", required=True, type=str, help="The URI of the hypervisor libvirt should "
                                                                           "use.")
     parser.add_argument("--libvirt-network-name", required=True, type=str, help="The name of the libvirt network "
                                                                                 "which will be created.")

@@ -26,7 +26,7 @@ def shutdown_libvirt_network(args_config):
 
 
 def get_container(container_name):
-    return docker_client.get(container_name)
+    return docker_client.containers.get(container_name)
 
 
 def shutdown_network_service_container(container):
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--ns-container-name", required=True, type=str, help="The name the network service container "
                                                                              "should have.")
-    parser.add_argument("--hyperviser-uri", required=True, type=str, help="The URI of the hypervisor libvirt should "
+    parser.add_argument("--hypervisor-uri", required=True, type=str, help="The URI of the hypervisor libvirt should "
                                                                           "use.")
     parser.add_argument("--libvirt-network-name", required=True, type=str, help="The name of the libvirt network "
                                                                                 "which will be created.")
