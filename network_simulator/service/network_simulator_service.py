@@ -47,7 +47,7 @@ class NetworkSimulatorService:
         self.update_devices(device_list)
         self.write_device_config()
         # TODO make simulation source file configurable
-        sim_src_file = "tap-wifi-full_setup"
+        sim_src_file = "tap-wifi-containers"
         self.start_ns3(sim_src_file)
 
     def stop_simulation(self):
