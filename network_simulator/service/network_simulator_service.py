@@ -36,10 +36,10 @@ class NetworkSimulatorService:
         self.devices[device_id] = Device(device_data)
         return self.net_namespace_name
 
-    def unregister_device(self, device_id):
+    def deregister_device(self, device_id):
         if device_id not in self.devices.keys():
-            raise UnknownDeviceException("Cannot unregister device '{}'.".format(device_id))
-        self.logger.info("Unregister device with ID {}.".format(device_id))
+            raise UnknownDeviceException("Cannot deregister device '{}'.".format(device_id))
+        self.logger.info("Deregister device with ID {}.".format(device_id))
         self.devices.pop(device_id)
 
     def run_simulation(self, device_list):

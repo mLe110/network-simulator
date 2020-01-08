@@ -1,6 +1,6 @@
 ## Overview
 
-The network-simulator service exposes two different kinds of REST APIs. The VIoTD API is for virtualized IoT devices to register/unregister themselves. Registering means that a VIoTD wants to participate in the future simulation. VIoTDs, which have not registered themselves at the network-simulator service, cannot participate in a simulation.
+The network-simulator service exposes two different kinds of REST APIs. The VIoTD API is for virtualized IoT devices to register/deregister themselves. Registering means that a VIoTD wants to participate in the future simulation. VIoTDs, which have not registered themselves at the network-simulator service, cannot participate in a simulation.
 The second API is the Simulation API. These endpoints are designated to the simulation platform and can be used to start the simulation and to set required device coordinates for wireless setups.
 
 The base URL for all APIs is "http://host:port/api/v1".
@@ -24,16 +24,16 @@ The response contains the name of the network namespace ns-3 is running in. An e
 }
 ```
 
-#### Unregister device
-A device has to unregister if it leaves the setup, so that the network-simulator service is informed that this device will not participate in any future simulation. It is important to mention that these steps need to be done before a simulation starts, i.e. a device cannot unregister itself during the simulation.
-To unregister a device, issue a DELETE request to "/unregister/<device_id>", where <device_id> is the ID used by the device to register itself previously. If the device was successfully unregistered, the status code 200 is returned. Otherwise, a proper status code with an error message.
+#### Deregister device
+A device has to deregister if it leaves the setup, so that the network-simulator service is informed that this device will not participate in any future simulation. It is important to mention that these steps need to be done before a simulation starts, i.e. a device cannot deregister itself during the simulation.
+To deregister a device, issue a DELETE request to "/deregister/<device_id>", where <device_id> is the ID used by the device to register itself previously. If the device was successfully deregistered, the status code 200 is returned. Otherwise, a proper status code with an error message.
 
 In case the request fails, a possible error response looks like the following:
 ```json
 {
   "error": {
     "type": "UnknownDeviceException",
-    "message": "Cannot unregister device 'unknownID'."
+    "message": "Cannot deregister device 'unknownID'."
   }
 }
 ```
@@ -69,7 +69,7 @@ If something goes wrong, e.g. the list contains a device which is not registered
 {
   "error": {
     "type": "UnknownDeviceException",
-    "message": "Cannot unregister device 'unknownID'."
+    "message": "Cannot deregister device 'unknownID'."
   }
 }
 ```

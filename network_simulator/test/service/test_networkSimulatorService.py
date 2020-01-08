@@ -46,14 +46,14 @@ class TestNetworkSimulatorService(TestCase):
         self.network_svc.register_new_device(self.device_data_dict)
         self.assertIn(self.device_id, self.network_svc.devices.keys())
 
-    def test_unregisterDevice(self):
+    def test_deregisterDevice(self):
         self.network_svc.devices[self.device_id] = ""
-        self.network_svc.unregister_device(self.device_id)
+        self.network_svc.deregister_device(self.device_id)
         self.assertNotIn(self.device_id, self.network_svc.devices.keys())
 
-    def test_unregisterInvalidDevice(self):
+    def test_deregisterInvalidDevice(self):
         with self.assertRaises(UnknownDeviceException):
-            self.network_svc.unregister_device(self.device_id)
+            self.network_svc.deregister_device(self.device_id)
 
     def test_addDeviceXPosition(self):
         self.network_svc.register_new_device(self.device_data_dict)

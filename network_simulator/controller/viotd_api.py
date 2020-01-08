@@ -18,10 +18,10 @@ def register_device():
     })
 
 
-@viotd_api_bp.route("/unregister/<device_id>", methods=["DELETE"])
-def unregister_device(device_id):
-    current_app.logger.debug("Unregister endpoint called with data: '{}'.".format(device_id))
-    current_app.net_sim_service.unregister_device(device_id)
+@viotd_api_bp.route("/deregister/<device_id>", methods=["DELETE"])
+def deregister_device(device_id):
+    current_app.logger.debug("Deregister endpoint called with data: '{}'.".format(device_id))
+    current_app.net_sim_service.deregister_device(device_id)
     return ReturnValues.SUCCESS.value
 
 
