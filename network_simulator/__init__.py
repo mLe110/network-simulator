@@ -18,4 +18,3 @@ def create_app(net_namespace_name, config=None):
     app.register_blueprint(simulation_api.simulation_api_bp, url_prefix="/api/v1/simulation")
 
     return app
-

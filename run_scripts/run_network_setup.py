@@ -6,6 +6,7 @@ import docker
 xml_bridge_config = """
 <network>
   <name>{network_name}</name>
+  <bridge name="{network_name}"/>
   <forward mode="nat" />
   <ip address="{bridge_ip}" netmask="{netmask}">
     <dhcp>
