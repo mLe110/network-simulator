@@ -1,4 +1,6 @@
 import logging
+import os
+import signal
 import subprocess
 import threading
 
@@ -47,18 +49,13 @@ class NetworkSimulatorService:
         self.update_devices(device_list)
         self.write_device_config()
         # TODO make simulation source file configurable
-        sim_src_file = "tap-wifi-containers"
+        sim_src_file = "tap-wifi-full_setup"
         self.start_ns3(sim_src_file)
 
     def stop_simulation(self):
         self.logger.info("Stop simulation.")
         if self.proc:
-            self.proc.terminate()
-            try:
-                self.proc.wait(timeout=1)
-                self.logger.debug("Process exited with rc={}".format(self.proc.returncode))
-            except subprocess.TimeoutExpired:
-                self.logger.warning("Process did not exit in time.")
+            os.killpg(os.getpgid(self.proc.pid), signal.SIGINT)
         else:
             raise SimulationException("Cannot stop simulation. Simulation not running.")
 
@@ -76,7 +73,7 @@ class NetworkSimulatorService:
     def start_ns3(self, sim_src_file):
         self.logger.debug("Start simulation with simulation file '{}'.".format(sim_src_file))
         self.proc = subprocess.Popen(["$WAF --run " + sim_src_file], stdout=subprocess.PIPE,
-                                     stderr=subprocess.STDOUT, shell=True)
+                                     stderr=subprocess.STDOUT, shell=True, preexec_fn=os.setsid)
         th = threading.Thread(target=self.output_reader, daemon=True)
         th.start()
 
