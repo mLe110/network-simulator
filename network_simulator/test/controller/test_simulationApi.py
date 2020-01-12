@@ -1,5 +1,5 @@
 import json
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from network_simulator.test.controller.base_api import TestBaseApi, BASE_URL
 
@@ -43,7 +43,8 @@ class TestViotdApi(TestBaseApi):
         self.assertEqual(200, response.status_code)
         self.assertEqual(b"DONE", response.get_data())
 
-    def test_stopSimulationWhenNs3Running(self):
+    @patch("network_simulator.service.network_simulator_service.os")
+    def test_stopSimulationWhenNs3Running(self, mock_os):
         self.app.application.net_sim_service.proc = Mock()
         response = self.app.get(BASE_URL + "/simulation/stop")
         self.assertEqual(200, response.status_code)
