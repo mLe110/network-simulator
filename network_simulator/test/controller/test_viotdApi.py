@@ -1,10 +1,12 @@
 import json
+from unittest.mock import patch
 
 from network_simulator.test.controller.base_api import TestBaseApi, BASE_URL
 
 
 class TestViotdApi(TestBaseApi):
-    def setUp(self):
+    @patch("network_simulator.service.network_topology_handler.write_network_topology_to_file")
+    def setUp(self, write_network_topology_to_file_mock):
         super().setUp()
 
     def test_registerDevice(self):

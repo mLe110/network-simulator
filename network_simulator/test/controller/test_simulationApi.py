@@ -9,21 +9,35 @@ class TestViotdApi(TestBaseApi):
         super().setUp()
         self.app.application.net_sim_service.start_ns3 = Mock(return_value=None)
         self.app.application.net_sim_service.write_device_config = Mock(return_value=None)
-        self.device1 = {"device_id": "test1", "device_type": "vm", "tap_if_name": "tap1"}
-        self.device2 = {"device_id": "test2", "device_type": "container", "tap_if_name": "tap2"}
-        self.devices_list = [{"device_id": "test1", "xpos": 1, "ypos": 2},
-                             {"device_id": "test2", "xpos": 2, "ypos": 1}]
+        self.device1 = {"device_id": "viotd-id", "device_type": "vm", "tap_if_name": "tap1"}
+        self.topology_devices_json = {
+            "devices": [],
+            "network": []
+        }
+        self.topology_json = {
+            "devices": [{
+                "device_id": "switch1",
+                "type": "bridge"
+            }, {
+                "device_id": "viotd-id",
+            }],
+            "network": [{
+                "network_type": "CSMA",
+                "general_config": {
+                    "data_rate": "512kbps",
+                    "delay": "10ms"
+                },
+                "address": {
+                    "ip": "10.1.1.0",
+                    "netmask": "255.255.255.0"
+                },
+                "devices": ["viotd-id", "switch1"]
+            }]
+        }
 
     def test_startSimulationWithNoDevices(self):
         response = self.app.post(BASE_URL + "/simulation/start",
                                  data=json.dumps([]),
-                                 content_type="application/json")
-        self.assertEqual(400, response.status_code)
-
-    def test_startSimulationWithUnknownDevices(self):
-        self.devices_list.append({"device_id": "invalid", "xpos": 4, "ypos": 5})
-        response = self.app.post(BASE_URL + "/simulation/start",
-                                 data=json.dumps(self.devices_list),
                                  content_type="application/json")
         self.assertEqual(400, response.status_code)
 
@@ -33,12 +47,12 @@ class TestViotdApi(TestBaseApi):
                                  content_type="application/json")
         self.assertEqual(400, response.status_code)
 
-    def test_startSimulationWithTwoDevices(self):
+    @patch("network_simulator.service.network_topology_handler.write_network_topology_to_file")
+    def test_startSimulationWithTwoDevices(self, mock_write_topology):
         self.register_device(self.device1)
-        self.register_device(self.device2)
         self.app.application.net_sim_service.start_ns3 = Mock(return_value=None)
         response = self.app.post(BASE_URL + "/simulation/start",
-                                 data=json.dumps(self.devices_list),
+                                 data=json.dumps(self.topology_json),
                                  content_type="application/json")
         self.assertEqual(200, response.status_code)
         self.assertEqual(b"DONE", response.get_data())

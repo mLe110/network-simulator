@@ -5,19 +5,20 @@ from werkzeug.exceptions import BadRequest
 
 from network_simulator.controller.return_value import ReturnValues
 from network_simulator.exceptions.device_exceptions import InvalidDeviceListException
+from network_simulator.exceptions.network_topology_handler_exception import InvalidNetworkTopologyException
 
 simulation_api_bp = Blueprint("simulation_api", __name__)
 
 
 @simulation_api_bp.route("/start", methods=["POST"])
 def run_simulation():
-    devices_list = request.get_json()
-    if devices_list and len(devices_list) > 1:
-        current_app.net_sim_service.run_simulation(devices_list)
+    network_topology_json = request.get_json()
+    if network_topology_json:
+        current_app.net_sim_service.run_simulation(network_topology_json)
         return ReturnValues.SUCCESS.value
     else:
-        raise InvalidDeviceListException("Simulation cannot be started with '{}' devices."
-                                         .format(devices_list))
+        raise InvalidNetworkTopologyException("Simulation cannot be started "
+                                              "when network topology is None.")
 
 
 @simulation_api_bp.route("/stop", methods=["GET"])

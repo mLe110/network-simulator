@@ -1,3 +1,4 @@
+import json
 import logging
 import copy
 
@@ -5,11 +6,12 @@ from network_simulator.exceptions.network_topology_handler_exception import Inva
     InvalidNetworkTopologyException
 
 
-def process_network_topology(registered_devices, topology_json):
+def process_network_topology(registered_devices, topology_json_file_path, topology_json):
     logger = logging.getLogger(__name__)
     logger.info("Process network topology json.")
     validate_network_device_ids(topology_json)
-    return enrich_json_topology(registered_devices, topology_json)
+    enriched_json = enrich_json_topology(registered_devices, topology_json)
+    write_network_topology_to_file(topology_json_file_path, enriched_json)
 
 
 def validate_network_device_ids(topology_json):
@@ -39,8 +41,15 @@ def enrich_json_topology(registered_devices, topology_json):
             if "type" in device:
                 raise InvalidDeviceTypeException("Device in JSON has type {}, but is a tap device.".format(device["type"]))
 
-            copied_device["type"] = registered_devices[device["device_id"]]["device_type"]
-            copied_device["tap_if_name"] = registered_devices[device["device_id"]]["tap_if_name"]
+            copied_device["type"] = registered_devices[device["device_id"]].device_type
+            copied_device["tap_if_name"] = registered_devices[device["device_id"]].tap_if_name
         enriched_json["devices"].append(copied_device)
 
     return enriched_json
+
+
+def write_network_topology_to_file(device_config_file_path, enriched_json):
+    logger = logging.getLogger(__name__)
+    logger.debug("Write device configs to file.")
+    with open(device_config_file_path, "w") as f:
+        json.dump(enriched_json, f)

@@ -7,7 +7,8 @@ from network_simulator.service.network_simulator_service import Device
 
 
 class TestNetworkSimulatorService(TestCase):
-    def setUp(self):
+    @patch("network_simulator.service.network_topology_handler.write_network_topology_to_file")
+    def setUp(self, write_network_topology_to_file_mock):
         self.device_id = "testid"
         self.device_type = "vm"
         self.tap_if_name = "testtap"
@@ -23,19 +24,8 @@ class TestNetworkSimulatorService(TestCase):
 
     def test_deviceStrRepresentation(self):
         device = Device(self.device_data_dict)
-        device.xpos = 4.0
-        device.ypos = 3.0
-        str_rep = "{},{},{},{},{}".format(self.device_id, self.device_type, self.tap_if_name, 4.0, 3.0)
+        str_rep = "{},{},{}".format(self.device_id, self.device_type, self.tap_if_name)
         self.assertEqual(str_rep, str(device))
-
-    def test_writeDeviceConfig(self):
-        device1 = self.create_device("test1")
-        device2 = self.create_device("test2")
-        self.network_svc.devices[device1.device_id] = device1
-        self.network_svc.devices[device2.device_id] = device2
-        with patch("network_simulator.service.network_simulator_service.open", mock_open()) as mocked_file:
-            self.network_svc.write_device_config()
-            self.assertEqual([call(str(device1)+'\n'), call(str(device2)+'\n')], mocked_file().write.call_args_list)
 
     def test_registerDeviceTwice(self):
         self.network_svc.devices[self.device_id] = ""
@@ -54,16 +44,6 @@ class TestNetworkSimulatorService(TestCase):
     def test_deregisterInvalidDevice(self):
         with self.assertRaises(UnknownDeviceException):
             self.network_svc.deregister_device(self.device_id)
-
-    def test_addDeviceXPosition(self):
-        self.network_svc.register_new_device(self.device_data_dict)
-        self.network_svc.set_device_position(self.device_data_dict)
-        self.assertEqual(self.device_data_dict["xpos"], self.network_svc.devices[self.device_id].xpos)
-
-    def test_addDeviceYPosition(self):
-        self.network_svc.register_new_device(self.device_data_dict)
-        self.network_svc.set_device_position(self.device_data_dict)
-        self.assertEqual(self.device_data_dict["ypos"], self.network_svc.devices[self.device_id].ypos)
 
     # helper
     def create_device(self, device_id):
