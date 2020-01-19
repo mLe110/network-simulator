@@ -1,0 +1,50 @@
+{
+	"devices": [{ 
+		"device_id": "container1",
+		"xpos": 0.0,
+		"ypos": 0.0
+	}, {
+		"device_id": "container2"
+	}, {
+		"device_id": "ap1",
+		"type": "ap",
+		"xpos": 10.0,
+		"ypos": 0.0
+	}, {
+		"device_id": "router1",
+		"type": "router"
+	}],
+	"network": [{
+		"network_type": "AP_STA",
+		"general_config": {
+			"ssid": "test-net"
+		},
+		"address": { 
+			"ip": "10.1.1.0",
+			"netmask": "255.255.255.0"
+		},
+		"devices": [ "container1", "ap1"]
+	}, {
+		"network_type": "P2P",
+		"general_config": {
+			"data_rate": "512kbps",
+			"delay": "10ms"
+		},
+		"address": { 
+			"ip": "10.1.2.0",
+			"netmask": "255.255.255.0"
+		},
+		"devices": [ "ap1", "router1"]		
+	}, {
+		"network_type": "CSMA",
+		"general_config": {
+			"data_rate": "512kbps",
+			"delay": "10ms"
+		},
+		"address": { 
+			"ip": "10.1.3.0",
+			"netmask": "255.255.255.0"
+		},
+		"devices": [ "router1", "container2"]
+	}]
+}

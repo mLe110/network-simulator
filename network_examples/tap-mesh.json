@@ -1,0 +1,23 @@
+{
+	"devices": [{ 
+		"device_id": "container1",
+		"xpos": 0.0,
+		"ypos": 0.0
+	}, {
+		"device_id": "container2",
+		"xpos": 10.0,
+		"ypos": 15.0
+	}, {
+		"device_id": "container3",
+		"xpos": 3.0,
+		"ypos": 4.0
+	}],
+	"network": [{
+		"network_type": "MESH",
+		"address": { 
+			"ip": "10.1.1.0",
+			"netmask": "255.255.255.0"
+		},
+		"devices": [ "container1", "container2", "container3"]
+	}]
+}

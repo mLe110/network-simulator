@@ -1,0 +1,26 @@
+{
+	"devices": [{ # contains all nodes of the simulation, non VIoTDs included (e.g. bridge or router)
+		"device_id": "testDevice1",
+		"type": "vm", # or container, process, bridge, router, ap
+		"xpos": 10.0,
+		"ypos": 3.0
+	}, {
+		"device_id": "testDevice2",
+		"type": "container",
+		"xpos": 10.0,
+		"ypos": 3.0
+	}, {
+		....
+	}],
+	"network": [{
+		"network_type": "ADHOC | AP_STA | CSMA | P2P | MESH",
+		"general_config": {
+			"network specific configuratin, for AP_STA, contains AP node, for bridge contains bridge node"
+		},
+		"address": { # optional, not needed for bridge
+			"ip": "10.1.1.0",
+			"netmask": "255.255.255.0"
+		},
+		"devices": [ "testDevice1", "testDevice2"]		
+	}]
+}

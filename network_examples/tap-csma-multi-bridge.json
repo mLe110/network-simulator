@@ -1,0 +1,57 @@
+{
+	"devices": [{ 
+		"device_id": "container1"
+	}, {
+		"device_id": "container2"
+	}, {
+		"device_id": "container3"
+	}, {
+		"device_id": "switch1",
+		"type": "switch"
+	}, {
+		"device_id": "switch2",
+		"type": "switch"
+	}],
+	"network": [{
+		"network_type": "CSMA",
+		"general_config": {
+			"data_rate": "512kbps",
+			"delay": "10ms"
+		},
+		"address": { 
+			"ip": "10.1.1.0",
+			"netmask": "255.255.255.0"
+		},
+		"devices": [ "container1", "switch1"]
+	}, {
+		"network_type": "CSMA",
+		"general_config": {
+			"data_rate": "512kbps",
+			"delay": "10ms"
+		},
+		"devices": [ "switch1", "switch2"]		
+	}, {
+		"network_type": "CSMA",
+		"general_config": {
+			"data_rate": "512kbps",
+			"delay": "10ms"
+		},
+		"address": { 
+			"ip": "10.1.1.0",
+			"netmask": "255.255.255.0"
+		},
+		"devices": [ "switch2", "container2"]
+	},{
+		"network_type": "CSMA",
+		"general_config": {
+			"data_rate": "512kbps",
+			"delay": "10ms"
+		},
+		"address": { 
+			"ip": "10.1.1.0",
+			"netmask": "255.255.255.0"
+		},
+		"devices": [ "switch2", "container3"]
+	}]
+}
+
