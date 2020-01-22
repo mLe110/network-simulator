@@ -2,7 +2,7 @@ from unittest import TestCase
 from unittest.mock import patch, Mock
 
 from network_simulator.exceptions.libvirt_network_service_exception import DuplicateNetworkNameException, \
-    LibvirtNetworkCreationException, UnknownNetworkException
+    LibvirtNetworkCreationException, UnknownNetworkException, LibvirtHypervisorConnectionException
 from network_simulator.network.libvirt_network_service import LibvirtNetworkService, NetworkInfo
 
 
@@ -34,6 +34,11 @@ class TestLibvirtNetworkService(TestCase):
         conn = self.libvirt_network.get_hypervisor_connection()
         self.assertEqual(mock_conn, conn)
         mock_open.assert_not_called()
+
+    def test_getHypervisorConnectionFails(self, mock_libvirt):
+        mock_libvirt.open.return_value = None
+        with self.assertRaises(LibvirtHypervisorConnectionException):
+            self.libvirt_network.get_hypervisor_connection()
 
     def test_addNetworkSuccessfully(self, mock_libvirt):
         self.libvirt_network.add_network(self.network_info_json)

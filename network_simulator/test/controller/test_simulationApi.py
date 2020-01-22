@@ -73,8 +73,11 @@ class TestViotdApi(TestBaseApi):
         setup_network_mock.assert_called_once()
 
     def test_stopSimulationWhenNs3IsNotRunning(self):
+        setup_network_mock = Mock(return_value=None)
+        self.mock_libvirt_service.setup_all_networks = setup_network_mock
         response = self.app.get(BASE_URL + "/simulation/stop")
-        self.assertEqual(400, response.status_code)
+        self.assertEqual(200, response.status_code)
+        setup_network_mock.assert_called_once()
 
     # helper
     def register_device(self, device):

@@ -4,6 +4,7 @@ from flask import (
 from werkzeug.exceptions import BadRequest
 
 from network_simulator.controller.return_value import ReturnValues
+from network_simulator.exceptions.network_simulator_service_exception import SimulationException
 from network_simulator.exceptions.network_topology_handler_exception import InvalidNetworkTopologyException
 
 simulation_api_bp = Blueprint("simulation_api", __name__)
@@ -24,7 +25,10 @@ def run_simulation():
 @simulation_api_bp.route("/stop", methods=["GET"])
 def stop_simulation():
     current_app.libvirt_network_service.setup_all_networks()
-    current_app.net_sim_service.stop_simulation()
+    try:
+        current_app.net_sim_service.stop_simulation()
+    except SimulationException as ex:
+        current_app.logger.warning("Error while stopping simulation: '{}'.".format(ex.description))
     return ReturnValues.SUCCESS.value
 
 

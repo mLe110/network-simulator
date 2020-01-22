@@ -3,7 +3,7 @@ import logging
 import libvirt
 
 from network_simulator.exceptions.libvirt_network_service_exception import DuplicateNetworkNameException, \
-    LibvirtNetworkCreationException, UnknownNetworkException
+    LibvirtNetworkCreationException, UnknownNetworkException, LibvirtHypervisorConnectionException
 
 xml_network_config = """
 <network>
@@ -56,10 +56,12 @@ class LibvirtNetworkService:
         self.remove_network(network_name)
 
     def shutdown_libvirt_network(self, network_name):
+        self.logger.debug("Shutdown libvirt network '{}'.".format(network_name))
         network = self.get_libvirt_network(network_name)
         network.destroy()
 
     def get_libvirt_network(self, network_name):
+        self.logger.debug("Get libvirt network '{}'.".format(network_name))
         conn = self.get_hypervisor_connection()
         network = conn.networkLookupByName(network_name)
         if not network:
@@ -68,6 +70,7 @@ class LibvirtNetworkService:
         return network
 
     def add_network(self, network_json):
+        self.logger.debug("Add network to network dict. Input json: '{}'.".format(network_json))
         network_info = NetworkInfo.from_network_dict(network_json)
         if network_info.network_name in self.network_dict.keys():
             raise DuplicateNetworkNameException("Network '{}' already exists."
@@ -77,9 +80,11 @@ class LibvirtNetworkService:
         return network_info
 
     def remove_network(self, network_name):
+        self.logger.debug("Remove network from network dict. Network name: '{}'.".format(network_name))
         del self.network_dict[network_name]
 
     def setup_single_network(self, network_info):
+        self.logger.info("Setup libvirt network '{}'.".format(network_info.network_name))
         network_config_str = self.create_libvirt_config_str(network_info)
         self.create_libvirt_network(network_config_str)
 
@@ -91,6 +96,7 @@ class LibvirtNetworkService:
         return config_str.replace("{end_ip}", network_info.end_ip)
 
     def create_libvirt_network(self, network_config_str):
+        self.logger.debug("Create libvirt network. Network XML: '{}'.".format(network_config_str))
         # create a transient virtual network
         conn = self.get_hypervisor_connection()
         network = conn.networkCreateXML(network_config_str)
@@ -106,6 +112,7 @@ class LibvirtNetworkService:
         else:
             conn = libvirt.open(self.hypervisor_uri)
             if not conn:
-                print("Failed to open connection to '{}'.".format(self.hypervisor_uri))
-                exit(1)
+                self.logger.error("Failed to open connection to '{}'.".format(self.hypervisor_uri))
+                raise LibvirtHypervisorConnectionException(
+                    "Failed to open connection to '{}'.".format(self.hypervisor_uri))
             return conn
