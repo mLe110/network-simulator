@@ -23,8 +23,8 @@ def run_simulation():
 
 @simulation_api_bp.route("/stop", methods=["GET"])
 def stop_simulation():
-    current_app.net_sim_service.stop_simulation()
     current_app.libvirt_network_service.setup_all_networks()
+    current_app.net_sim_service.stop_simulation()
     return ReturnValues.SUCCESS.value
 
 
