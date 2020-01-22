@@ -48,6 +48,7 @@ class NetworkSimulatorService:
         process_network_topology(self.devices, self.device_config_file_path,
                                  network_topology_json)
         # TODO make simulation source file configurable
+        # TODO remove, not needed anymore
         sim_src_file = "tap-wifi-full_setup"
         self.start_ns3(sim_src_file)
 

@@ -1,0 +1,38 @@
+{
+        "devices": [{ 
+                "device_id": "container1",
+		"type": "container",
+		"tap_if_name": "tap-container1"
+        }, {
+                "device_id": "container2",
+		"type": "container",
+		"tap_if_name": "tap-container2"
+        }, {
+                "device_id": "switch1",
+                "type": "switch"
+        }],
+        "network": [{
+                "network_type": "CSMA",
+                "general_config": {
+                        "data_rate": "5000000",
+                        "delay": "2"
+                },
+                "address": {
+                        "ip": "10.1.1.0",
+                        "netmask": "255.255.255.0"
+                },
+                "devices": [ "container1", "switch1"]
+        }, {
+                "network_type": "CSMA",
+                "general_config": {
+                        "data_rate": "5000000",
+                        "delay": "2"
+                },
+                "address": { 
+                        "ip": "10.1.1.0",
+                        "netmask": "255.255.255.0"
+                },
+                "devices": [ "container2", "switch1"]
+        }]
+}
+

@@ -1,0 +1,24 @@
+{
+        "devices": [{ 
+                "device_id": "container1",
+		"type": "container",
+		"tap_if_name": "tap-container1"
+        }, {
+                "device_id": "container2",
+		"type": "container",
+		"tap_if_name": "tap-container2"
+        }],
+        "network": [{
+                "network_type": "CSMA",
+                "general_config": {
+                        "data_rate": "5000000",
+                        "delay": "2"
+                },
+                "address": {
+                        "ip": "10.1.1.0",
+                        "netmask": "255.255.255.0"
+                },
+                "devices": [ "container1", "container2"]
+        }]
+}
+
