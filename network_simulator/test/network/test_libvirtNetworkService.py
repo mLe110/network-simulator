@@ -57,6 +57,14 @@ class TestLibvirtNetworkService(TestCase):
         with self.assertRaises(DuplicateNetworkNameException):
             self.libvirt_network.add_network(self.network_info_json)
 
+    def test_addRemoveAddNetwork(self, mock_libvirt):
+        self.libvirt_network.add_network(self.network_info_json)
+        self.assertEqual(1, len(self.libvirt_network.network_dict))
+        self.libvirt_network.remove_network(self.network_info_json["network_name"])
+        self.assertEqual(0, len(self.libvirt_network.network_dict))
+        self.libvirt_network.add_network(self.network_info_json)
+        self.assertEqual(1, len(self.libvirt_network.network_dict))
+
     def test_createLibvirtConfig(self, mock_libvirt):
         network_info = NetworkInfo.from_network_dict(self.network_info_json)
         config_str = self.libvirt_network.create_libvirt_config_str(network_info)

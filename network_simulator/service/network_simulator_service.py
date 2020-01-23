@@ -23,7 +23,8 @@ class Device:
 class NetworkSimulatorService:
     def __init__(self, net_namespace_name):
         self.logger = logging.getLogger(__name__)
-        self.device_config_file_path = "network_topology.json"
+        self.device_config_file_path = "/app/network_topology.json"
+        self.sim_src_file = "network-template-core"
         self.net_namespace_name = net_namespace_name
         self.proc = None
         self.devices = {}
@@ -47,10 +48,7 @@ class NetworkSimulatorService:
         self.logger.info("Run simulation.")
         process_network_topology(self.devices, self.device_config_file_path,
                                  network_topology_json)
-        # TODO make simulation source file configurable
-        # TODO remove, not needed anymore
-        sim_src_file = "tap-wifi-full_setup"
-        self.start_ns3(sim_src_file)
+        self.start_ns3(self.sim_src_file)
 
     def stop_simulation(self):
         self.logger.info("Stop simulation.")

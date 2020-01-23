@@ -7,15 +7,20 @@ docker_api = docker.APIClient(base_url='unix://var/run/docker.sock')
 
 
 def run_container(args_config):
-    container = docker_client.containers.run(image="mle110/ns:0.1",
+    container = docker_client.containers.run(image="mle110/ns:0.2",
                                              name=args_config.ns_container_name,
                                              ports={'5000/tcp': 5000},
                                              environment={
                                                  "HYPERVISOR_URI": args_config.hypervisor_uri
                                              },
-                                             volumes={"/var/run/netns": {
-                                                 "bind": "/var/run/netns",
-                                             }},
+                                             volumes={
+                                                 "/var/run/netns": {
+                                                     "bind": "/var/run/netns",
+                                                 },
+                                                 "/var/run/libvirt/libvirt-sock": {
+                                                     "bind": "/var/run/libvirt/libvirt-sock",
+                                                 }
+                                             },
                                              cap_add=["NET_ADMIN"],
                                              devices=["/dev/net/tun:/dev/net/tun"],
                                              detach=True,
@@ -53,4 +58,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     setup_network_service_network(args)
-

@@ -1,6 +1,6 @@
 FROM ns:3.29
 
-RUN apt-get update && apt-get install -y python3-dev python3-pip
+RUN apt-get update && apt-get install -y python3-dev python3-pip libboost-all-dev libvirt-bin libvirt-dev
 
 COPY ns3/networks/ source/ns-3.29/scratch/
 

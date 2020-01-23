@@ -39,6 +39,9 @@ class LibvirtNetworkService:
         self.conn = None
         self.network_dict = {}
 
+    def __del__(self):
+        self.shutdown_all_networks()
+
     def setup_all_networks(self):
         for network_info in self.network_dict.values():
             self.setup_single_network(network_info)

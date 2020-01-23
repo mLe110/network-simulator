@@ -14,8 +14,8 @@ simulation_api_bp = Blueprint("simulation_api", __name__)
 def run_simulation():
     network_topology_json = request.get_json()
     if network_topology_json:
-        current_app.libvirt_network_service.shutdown_all_networks()
         current_app.net_sim_service.run_simulation(network_topology_json)
+        current_app.libvirt_network_service.shutdown_all_networks()
         return ReturnValues.SUCCESS.value
     else:
         raise InvalidNetworkTopologyException("Simulation cannot be started "
