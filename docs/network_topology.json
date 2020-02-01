@@ -1,7 +1,7 @@
 {
 	"devices": [{ # contains all nodes of the simulation, non VIoTDs included (e.g. bridge or router)
 		"device_id": "testDevice1",
-		"type": "vm", # or container, process, bridge, router, ap
+		"type": "vm | container | process | bridge | router | ap",
 		"xpos": 10.0,
 		"ypos": 3.0
 	}, {
